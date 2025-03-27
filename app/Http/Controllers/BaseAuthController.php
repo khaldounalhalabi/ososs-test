@@ -211,4 +211,21 @@ class BaseAuthController extends Controller
             ->message(__('site.updated_successfully'))
             ->send();
     }
+
+    public function userDetails()
+    {
+        $user = auth()->user();
+        if (!$user->hasRole($this->role)) {
+            return rest()
+                ->notAuthorized()
+                ->message(__('site.unauthorized'))
+                ->send();
+        }
+
+        return rest()
+            ->ok()
+            ->getSuccess()
+            ->data(UserResource::make($user->load($this->relations)))
+            ->send();
+    }
 }
