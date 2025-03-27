@@ -6,6 +6,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterUserRequest;
 use App\Http\Requests\Auth\RequestToResetPassword;
 use App\Http\Requests\Auth\ResetPasswordRequest;
+use App\Http\Requests\Auth\UpdateUserDetailsRequest;
 use App\Http\Resources\UserResource;
 use App\Mail\ResetPasswordCodeEmail;
 use App\Models\User;
@@ -191,6 +192,23 @@ class BaseAuthController extends Controller
             ->ok()
             ->data(true)
             ->message(__('site.password_changed'))
+            ->send();
+    }
+
+    public function updateUserDetails(UpdateUserDetailsRequest $request)
+    {
+        $user = auth()->user();
+        if (!$user->hasRole($this->role)) {
+            return rest()
+                ->notAuthorized()
+                ->message(__('site.unauthorized'))
+                ->send();
+        }
+        $user->update($request->validated());
+        return rest()
+            ->data(UserResource::make($user->load($this->relations)))
+            ->ok()
+            ->message(__('site.updated_successfully'))
             ->send();
     }
 }
