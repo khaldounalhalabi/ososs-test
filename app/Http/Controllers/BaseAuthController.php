@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -28,6 +29,36 @@ class BaseAuthController extends Controller
         return rest()
             ->ok()
             ->message(__('site.registered_successfully'))
+            ->data([
+                'user' => UserResource::make($user->load($this->relations)),
+                'token' => $token,
+                'refresh_token' => $refreshToken,
+            ])->send();
+    }
+
+    public function login(LoginRequest $request)
+    {
+        $token = auth()->attempt($request->validated());
+        if (!$token) {
+            return rest()
+                ->notAuthorized()
+                ->message(__('site.invalid_credentials'))
+                ->send();
+        }
+
+        $user = auth()->user();
+        if (!$user->hasRole($this->role)){
+            return rest()
+                ->notAuthorized()
+                ->message(__('site.invalid_credentials'))
+                ->send();
+        }
+
+        /** @noinspection PhpParamsInspection */
+        $refreshToken = auth()->refresh();
+        return rest()
+            ->ok()
+            ->message(__('site.logged_in_successfully'))
             ->data([
                 'user' => UserResource::make($user->load($this->relations)),
                 'token' => $token,
