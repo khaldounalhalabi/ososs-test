@@ -47,7 +47,7 @@ class BaseAuthController extends Controller
         }
 
         $user = auth()->user();
-        if (!$user->hasRole($this->role)){
+        if (!$user->hasRole($this->role)) {
             return rest()
                 ->notAuthorized()
                 ->message(__('site.invalid_credentials'))
@@ -64,5 +64,27 @@ class BaseAuthController extends Controller
                 'token' => $token,
                 'refresh_token' => $refreshToken,
             ])->send();
+    }
+
+    public function logout()
+    {
+        auth()->logout();
+        return rest()
+            ->ok()
+            ->message(__('site.logged_out_successfully'))
+            ->send();
+    }
+
+    public function refreshToken()
+    {
+        /** @noinspection PhpParamsInspection */
+        return rest()
+            ->ok()
+            ->message(__('site.refresh_token_successfully'))
+            ->data([
+                'user' => UserResource::make(auth()->user()->load($this->relations)),
+                'token' => auth()->setTTL(config('jwt.ttl'))->refresh(),
+                'refresh_token' => auth()->setTTL(config('jwt.refresh_ttl'))->refresh(),
+            ]);
     }
 }
