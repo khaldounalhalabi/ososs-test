@@ -73,6 +73,13 @@ class BaseAuthController extends Controller
 
     public function logout()
     {
+        if (!auth()->user()->hasRole($this->role)) {
+            return rest()
+                ->notAuthorized()
+                ->message(__('site.unauthorized'))
+                ->send();
+        }
+
         auth()->logout();
         return rest()
             ->ok()
@@ -82,6 +89,13 @@ class BaseAuthController extends Controller
 
     public function refreshToken()
     {
+        $user = auth()->user()->load($this->relations);
+        if (!$user->hasRole($this->role)) {
+            return rest()
+                ->notAuthorized()
+                ->message(__('site.unauthorized'))
+                ->send();
+        }
         /** @noinspection PhpParamsInspection */
         return rest()
             ->ok()
@@ -100,6 +114,13 @@ class BaseAuthController extends Controller
             return rest()
                 ->notFound()
                 ->message(__('site.invalid_email'))
+                ->send();
+        }
+
+        if (!$user->hasRole($this->role)) {
+            return rest()
+                ->notAuthorized()
+                ->message(__('site.unauthorized'))
                 ->send();
         }
 
@@ -142,6 +163,13 @@ class BaseAuthController extends Controller
             return rest()
                 ->notFound()
                 ->message(__('site.invalid_email'))
+                ->send();
+        }
+
+        if (!$user->hasRole($this->role)) {
+            return rest()
+                ->notAuthorized()
+                ->message(__('site.unauthorized'))
                 ->send();
         }
 
