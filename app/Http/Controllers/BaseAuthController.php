@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterUserRequest;
+use App\Http\Requests\Auth\RequestToResetPassword;
 use App\Http\Resources\UserResource;
+use App\Mail\ResetPasswordCodeEmail;
 use App\Models\User;
+use App\Models\VerificationCode;
 use App\RoleEnum;
+use Illuminate\Support\Facades\Mail;
 
 class BaseAuthController extends Controller
 {
@@ -86,5 +90,39 @@ class BaseAuthController extends Controller
                 'token' => auth()->setTTL(config('jwt.ttl'))->refresh(),
                 'refresh_token' => auth()->setTTL(config('jwt.refresh_ttl'))->refresh(),
             ]);
+    }
+
+    public function requestToResetPassword(RequestToResetPassword $request)
+    {
+        $user = User::where('email', $request->validated('email'))->first();
+        if (!$user) {
+            return rest()
+                ->notFound()
+                ->message(__('site.invalid_email'))
+                ->send();
+        }
+
+        do {
+            $code = sprintf('%06d', mt_rand(1, 999999));
+            $tempCode = VerificationCode::where('code', $code)->first();
+        } while ($tempCode != null);
+
+        VerificationCode::where('is_valid', true)
+            ->where('user_id', $user->id)
+            ->update(['is_valid' => false]);
+
+        $verificationCode = VerificationCode::create([
+            'code' => $code,
+            'user_id' => $user->id,
+            'valid_until' => now()->addHours(3)
+        ]);
+
+        Mail::to($user)
+            ->send(new ResetPasswordCodeEmail($user, $verificationCode));
+
+        return rest()
+            ->ok()
+            ->message(__("site.reset_password_code_sent"))
+            ->send();
     }
 }
