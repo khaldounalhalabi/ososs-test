@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterUserRequest;
 use App\Http\Requests\Auth\RequestToResetPassword;
+use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Http\Resources\UserResource;
 use App\Mail\ResetPasswordCodeEmail;
 use App\Models\User;
@@ -123,6 +124,45 @@ class BaseAuthController extends Controller
         return rest()
             ->ok()
             ->message(__("site.reset_password_code_sent"))
+            ->send();
+    }
+
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+        $verificationCode = VerificationCode::where('code', $request->validated('code'))->first();
+        if (!$verificationCode) {
+            return rest()
+                ->notFound()
+                ->message(__('site.invalid_code'))
+                ->send();
+        }
+
+        $user = User::where('email', $request->validated('email'))->first();
+        if (!$user) {
+            return rest()
+                ->notFound()
+                ->message(__('site.invalid_email'))
+                ->send();
+        }
+
+        if ($verificationCode->valid_until->isPast()
+            || !$verificationCode->is_valid
+            || $verificationCode->user_id != $user->id
+        ) {
+            return rest()
+                ->notFound()
+                ->message(__('site.invalid_code'))
+                ->send();
+        }
+
+        $user->update([
+            'password' => $request->validated('password')
+        ]);
+
+        return rest()
+            ->ok()
+            ->data(true)
+            ->message(__('site.password_changed'))
             ->send();
     }
 }
