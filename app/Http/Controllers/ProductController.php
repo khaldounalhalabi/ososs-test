@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUpdateProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -53,5 +53,32 @@ class ProductController extends Controller
                 fn($rest) => $rest->ok()->deleteSuccess(),
                 fn($rest) => $rest->unknown()->unknownError(),
             )->send();
+    }
+
+    public function store(StoreUpdateProductRequest $request)
+    {
+        $product = Product::create($request->validated());
+        return rest()
+            ->ok()
+            ->storeSuccess()
+            ->data(ProductResource::make($product))
+            ->send();
+    }
+
+    public function update(StoreUpdateProductRequest $request, $productId)
+    {
+        $product = Product::find($productId);
+        if (is_null($product)) {
+            return rest()
+                ->noData()
+                ->send();
+        }
+
+        $product->update($request->validated());
+        return rest()
+            ->ok()
+            ->updateSuccess()
+            ->data(ProductResource::make($product))
+            ->send();
     }
 }
