@@ -27,7 +27,7 @@ class StoreUpdateCountryRequest extends FormRequest
             'code' => [
                 'required',
                 'string',
-                'min:3',
+                'min:2',
                 'max:255',
                 Rule::unique('countries', 'code')
                     ->when(
