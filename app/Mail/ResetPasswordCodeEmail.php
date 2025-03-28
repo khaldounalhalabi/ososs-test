@@ -33,7 +33,6 @@ class ResetPasswordCodeEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: "Ossos Test Project",
             to: $this->user->email,
             subject: 'Reset your account password'
         );
