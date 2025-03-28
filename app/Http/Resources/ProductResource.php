@@ -16,6 +16,10 @@ class ProductResource extends JsonResource
             'name' => $this->name,
             'base_price' => $this->base_price,
             'description' => $this->description,
+            $this->mergeWhen(auth()->user()?->isCustomer(), fn() => [
+                'applicable_price' => $this->applicable_price ?? $this->base_price
+            ]),
+            'price_lists' => PriceListResource::collection($this->whenLoaded('priceLists')),
         ];
     }
 }

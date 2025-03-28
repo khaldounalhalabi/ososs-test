@@ -27,7 +27,7 @@ return new class extends Migration {
 
             $table->integer('priority')->default(0);
 
-            $table->unique(['product_id', 'country_code', 'currency_code', 'start_date', 'end_date', 'priority']);
+            $table->unique(['product_id', 'country_code', 'currency_code', 'start_date', 'end_date', 'priority'], 'price_lists_unique');
             $table->timestamps();
         });
     }

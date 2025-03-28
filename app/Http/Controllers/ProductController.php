@@ -5,12 +5,17 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUpdateProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::paginate(request('per_page', 10));
+        $products = Product::when(auth()->user()->isCustomer(), function (Builder|Product $query) {
+            $query->withApplicablePrice();
+        })->when(auth()->user()?->isAdmin(), function (Builder $query) {
+            $query->with('priceLists');
+        })->paginate(request('per_page', 100));
         $paginationData = $this->paginationData($products);
         return rest()
             ->ok()
@@ -23,7 +28,13 @@ class ProductController extends Controller
 
     public function show($productId)
     {
-        $product = Product::find($productId);
+        $product = Product::when(auth()->user()->isCustomer(), function (Builder|Product $query) {
+            $query->withApplicablePrice();
+        })->when(auth()->user()?->isAdmin(), function (Builder $query) {
+            $query->with('priceLists');
+        })->where('id', $productId)
+            ->first();
+
         if (is_null($product)) {
             return rest()
                 ->noData()
