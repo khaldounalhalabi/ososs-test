@@ -25,7 +25,8 @@ class RegisterUserRequest extends FormRequest
             'name' => 'required|string|max:255|min:3',
             'email' => 'required|string|email|min:3|max:255|unique:users,email',
             'password' => 'required|string|min:8|max:255|confirmed',
-            'country_id' => 'required|exists:countries,id|integer',
+            'country_id' => 'nullable|exists:countries,id|integer',
+            'currency_id' => 'nullable|exists:currencies,id|integer',
         ];
     }
 }

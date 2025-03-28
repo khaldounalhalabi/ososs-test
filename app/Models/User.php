@@ -12,12 +12,14 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
- * @property integer id
- * @property string name
- * @property string email
- * @property string password
- * @property integer country_id
- * @property Country country
+ * @property integer  id
+ * @property string   name
+ * @property string   email
+ * @property string   password
+ * @property integer  country_id
+ * @property Country  country
+ * @property integer  currency_id
+ * @property Currency currency
  */
 class User extends Authenticatable implements JWTSubject
 {
@@ -32,7 +34,8 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
-        'country_id'
+        'country_id',
+        'currency_id',
     ];
 
     /**
@@ -79,5 +82,10 @@ class User extends Authenticatable implements JWTSubject
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);
+    }
+
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
     }
 }

@@ -10,6 +10,6 @@ class CustomerAuthController extends BaseAuthController
     {
         parent::__construct();
         $this->role = RoleEnum::CUSTOMER->value;
-        $this->relations = ['country'];
+        $this->relations = ['country', 'currency'];
     }
 }

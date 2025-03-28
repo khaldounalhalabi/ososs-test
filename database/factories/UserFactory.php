@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Country;
+use App\Models\Currency;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -29,6 +30,7 @@ class UserFactory extends Factory
             'password' => '123456789',
             'remember_token' => Str::random(10),
             'country_id' => Country::factory(),
+            'currency_id' => Currency::factory(),
         ];
     }
 

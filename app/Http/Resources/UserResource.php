@@ -23,7 +23,9 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'email_verified_at' => $this->email_verified_at?->format('Y-m-d H:i:s'),
             'country_id' => $this->country_id,
+            'currency_id' => $this->currency_id,
             'country' => new CountryResource($this->whenLoaded('country')),
+            'currency' => new CurrencyResource($this->whenLoaded('currency')),
         ];
     }
 }

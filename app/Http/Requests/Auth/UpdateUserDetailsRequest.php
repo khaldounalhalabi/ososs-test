@@ -26,7 +26,8 @@ class UpdateUserDetailsRequest extends FormRequest
 
             'email' => 'email|max:255|min:3|string|unique:users,email,' . auth()->user()?->id,
             'name' => 'string|max:255|min:3',
-            'country_id' => ['integer', 'exists:countries,id', Rule::excludeIf(fn() => auth()->user()->isAdmin()), 'nullable', Rule::requiredIf(fn() => auth()->user()->isCustomer())],
+            'country_id' => ['integer', 'exists:countries,id', Rule::excludeIf(fn() => auth()->user()->isAdmin()), 'nullable'],
+            'currency_id' => ['integer', 'exists:currencies,id', Rule::excludeIf(fn() => auth()->user()->isAdmin()), 'nullable'],
         ];
     }
 }
