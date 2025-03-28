@@ -35,6 +35,6 @@ php 8.2 , composer , sqlite or mysql
    php artisan migrate:fresh --seed
    ```
 8. import the postman collection and start testing (use admin@email.com|123456789 for an admin account and
-   customer@email.com|123456789c for a customer account)
+   customer@email.com|123456789 for a customer account)
 
 Thanks for your time.
