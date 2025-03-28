@@ -5,6 +5,7 @@ namespace App\Models;
 use App\RoleEnum;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
@@ -16,6 +17,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @param string email
  * @param string password
  * @param integer country_id
+ * @param Country country
  */
 class User extends Authenticatable implements JWTSubject
 {
@@ -72,5 +74,10 @@ class User extends Authenticatable implements JWTSubject
     public function isCustomer(): bool
     {
         return $this->hasRole(RoleEnum::CUSTOMER->value);
+    }
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class);
     }
 }
