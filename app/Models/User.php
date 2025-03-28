@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\RoleEnum;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -61,5 +62,15 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims(): array
     {
         return [];
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->hasRole(RoleEnum::ADMIN->value);
+    }
+
+    public function isCustomer(): bool
+    {
+        return $this->hasRole(RoleEnum::CUSTOMER->value);
     }
 }

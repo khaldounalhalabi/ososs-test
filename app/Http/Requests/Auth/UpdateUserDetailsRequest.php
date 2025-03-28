@@ -4,6 +4,7 @@ namespace App\Http\Requests\Auth;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateUserDetailsRequest extends FormRequest
 {
@@ -12,7 +13,7 @@ class UpdateUserDetailsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,7 +26,7 @@ class UpdateUserDetailsRequest extends FormRequest
 
             'email' => 'email|max:255|min:3|string|unique:users,email,' . auth()->user()?->id,
             'name' => 'string|max:255|min:3',
-            'country_id' => 'integer|exists:countries,id',
+            'country_id' => ['integer', 'exists:countries,id', Rule::excludeIf(fn() => auth()->user()->isAdmin()), 'nullable', Rule::requiredIf(fn() => auth()->user()->isCustomer())],
         ];
     }
 }
