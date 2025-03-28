@@ -4,7 +4,7 @@ Hello there, I am Khaldoun Alhalabi
 
 ## requirements:
 
-php 8.2 , composers , sqlite or mysql
+php 8.2 , composer , sqlite or mysql
 
 ## How to set up the project
 
