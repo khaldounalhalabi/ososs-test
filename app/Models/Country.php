@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @param integer id
- * @param string code
- * @param string name
+ * @property integer id
+ * @property string code
+ * @property string name
  */
 class Country extends Model
 {

@@ -12,12 +12,12 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
- * @param integer id
- * @param string name
- * @param string email
- * @param string password
- * @param integer country_id
- * @param Country country
+ * @property integer id
+ * @property string name
+ * @property string email
+ * @property string password
+ * @property integer country_id
+ * @property Country country
  */
 class User extends Authenticatable implements JWTSubject
 {
