@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\CountryController;
+use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\CustomerAuthController;
 
 Route::prefix('/admin')
@@ -20,3 +22,6 @@ Route::prefix('/customer')
         Route::post('reset-password', [CustomerAuthController::class, 'resetPassword'])->name('reset-password');
     });
 
+
+Route::get('/currencies', [CurrencyController::class, 'index'])->name('currencies.index');
+Route::get('/countries', [CountryController::class, 'index'])->name('countries.index');
