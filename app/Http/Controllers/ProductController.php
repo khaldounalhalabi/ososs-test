@@ -15,7 +15,7 @@ class ProductController extends Controller
             $query->withApplicablePrice();
         })->when(auth()->user()?->isAdmin(), function (Builder $query) {
             $query->with('priceLists');
-        })->paginate(request('per_page', 100));
+        })->paginate(request('per_page', 10));
         $paginationData = $this->paginationData($products);
         return rest()
             ->ok()
