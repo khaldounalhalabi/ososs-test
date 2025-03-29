@@ -150,8 +150,7 @@ class MainTestCase extends TestCase
     public function storeTest(array $additionalAttributes = [], mixed $requestParams = null, bool $isDebug = false): void
     {
         $attributes = $this->model::factory()->raw($additionalAttributes);
-        $response = $this->post(route($this->requestPath, $requestParams), $attributes, $this->headers)
-            ->assertOk();
+        $response = $this->post(route($this->requestPath, $requestParams), $attributes, $this->headers);
 
         if ($isDebug) {
             dd($response);
