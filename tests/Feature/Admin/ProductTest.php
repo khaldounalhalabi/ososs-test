@@ -31,6 +31,7 @@ class ProductTest extends MainTestCase
     public function test_admin_can_show_a_products()
     {
         $this->requestPathHook($this->baseUrl . 'show')
+            ->relations(['priceLists'])
             ->showTest();
     }
 
