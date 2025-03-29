@@ -66,7 +66,9 @@ trait TestHelpers
 
         Artisan::call('db:seed RoleSeeder');
 
-        $this->signIn($this->userType);
+        if ($this->userType != 'none') {
+            $this->signIn($this->userType);
+        }
     }
 
     /**

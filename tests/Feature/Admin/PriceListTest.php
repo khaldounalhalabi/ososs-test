@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin;
+namespace Tests\Feature\Admin;
 
 use App\Http\Resources\PriceListResource;
 use App\Http\Resources\ProductResource;
